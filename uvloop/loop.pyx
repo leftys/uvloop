@@ -673,6 +673,7 @@ cdef class Loop:
         self._check_closed()
         self._ready.append(handle)
         self._ready_len += 1
+        self._max_ready_len = max(self._ready_len, self._max_ready_len)
 
     cdef inline _call_soon_handle(self, Handle handle):
         self._append_ready_handle(handle)
