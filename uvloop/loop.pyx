@@ -2916,24 +2916,6 @@ cdef class Loop:
                 "coroutines cannot be used with add_signal_handler()")
 
         if sig == uv.SIGCHLD:
-            if (hasattr(callback, '__self__') and
-                    isinstance(callback.__self__, aio_AbstractChildWatcher)):
-
-                warnings_warn(
-                    "!!! asyncio is trying to install its ChildWatcher for "
-                    "SIGCHLD signal !!!\n\nThis is probably because a uvloop "
-                    "instance is used with asyncio.set_event_loop(). "
-                    "The correct way to use uvloop is to install its policy: "
-                    "`asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())`"
-                    "\n\n", RuntimeWarning, source=self)
-
-                # TODO: ideally we should always raise an error here,
-                # but that would be a backwards incompatible change,
-                # because we recommended using "asyncio.set_event_loop()"
-                # in our README.  Need to start a deprecation period
-                # at some point to turn this warning into an error.
-                return
-
             raise RuntimeError(
                 'cannot add a signal handler for SIGCHLD: it is used '
                 'by the event loop to track subprocesses')
